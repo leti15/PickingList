@@ -149,7 +149,7 @@ public class DrawerLayoutActivity extends AppCompatActivity{
         mNavigationDrawerItemTitles= getResources().getStringArray(R.array.navigation_drawer_items_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
+        Log.wtf("2", "onCreate:");
         drawerItem = new DataModel[3];
         drawerItem[0] = new DataModel(R.drawable.ic_menu_camera, "Connect");
         drawerItem[1] = new DataModel(R.drawable.ic_menu_slideshow, "Fixtures");
