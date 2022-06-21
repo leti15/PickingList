@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/activity_config.xml" value="0.33" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/activity_config2.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/activity_config_login.xml" value="0.33" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/activity_config_plant.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/activity_info.xml" value="0.5" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/activity_lists.xml" value="0.25" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/activity_lists_visualizer.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/activity_main2.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/activity_visualize_single_list.xml" value="0.18" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/app_bar_lists_visualizer.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/content_lists_visualizer.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/drawer_layout.xml" value="0.35260416666666666" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/fragment_compartment_list.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/fragment_gallery.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/fragment_home.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/fragment_list_by_location.xml" value="0.5" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/fragment_slideshow.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/list_view_item_row.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/nav_header_lists_visualizer.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/recicler_object.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/layout/toolbar.xml" value="1.5888157894736843" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/menu/activity_main_drawer.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/menu/lists_visualizer.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/menu/navigation_side_menu.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.196" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

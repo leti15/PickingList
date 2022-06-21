@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText">
+    <item android:id="@+id/item1"
+        android:icon="@drawable/ic_menu_camera"
+        android:onClick="handleClick"
+        android:title="Lista 1"/>
+    <item android:id="@+id/item2"
+        android:onClick="handleClick"
+        android:icon="@drawable/ic_menu_gallery"
+        android:title="Lista 2"/>
+    <item android:id="@+id/item3"
+        android:onClick="handleClick"
+        android:icon="@drawable/ic_menu_slideshow"
+        android:title="Lista 3"/>
+    <item android:id="@+id/item4"
+        android:onClick="handleClick"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="Lista 4"/>
+    <item android:id="@+id/item5"
+        android:onClick="handleClick"
+        android:icon="@drawable/ic_menu_camera"
+        android:title="Lista 5"/>
+</menu>

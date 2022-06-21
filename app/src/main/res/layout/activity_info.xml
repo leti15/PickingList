@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".InfoActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Come funziona?"
+        android:textColor="#630CFD"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnBack2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="indietro"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <CheckBox
+        android:id="@+id/cbInfoName"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:text="Nome dell'articolo"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toStartOf="@+id/tvInfoNeed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:layout_constraintVertical_bias="0.51"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/btnInfoMinus"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:text="-"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toStartOf="@+id/edInfoQta"
+        app:layout_constraintStart_toEndOf="@+id/tvInfoNeed"
+        app:layout_constraintTop_toBottomOf="@+id/tvInfoAvaiable"
+        app:layout_constraintVertical_bias="0.461"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/btnInfoAdd"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:text="+"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/edInfoQta"
+        app:layout_constraintTop_toBottomOf="@+id/tvInfoAvaiable"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tvInfoNeed"
+        android:layout_width="94dp"
+        android:layout_height="wrap_content"
+        android:text="Quanti ne servirebbero"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toStartOf="@+id/btnInfoMinus"
+        app:layout_constraintStart_toEndOf="@+id/cbInfoName"
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:layout_constraintVertical_bias="0.49"
+        tools:visibility="visible" />
+
+    <EditText
+        android:id="@+id/edInfoQta"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:text="Qta presa"
+        android:textSize="12sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toStartOf="@+id/btnInfoAdd"
+        app:layout_constraintStart_toEndOf="@+id/btnInfoMinus"
+        app:layout_constraintTop_toBottomOf="@+id/tvInfoAvaiable"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tvInfoAvaiable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Qta disponibile"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/edInfoQta"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvInfoNeed"
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.28" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4117647" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
