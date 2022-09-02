@@ -78,13 +78,11 @@ public class BarCodeActivity extends AppCompatActivity {
                 scanCode();
             }
         });
-
     }
-
 
     private void scanCode(){
         ScanOptions options = new ScanOptions();
-        options.setPrompt("Volumn up to flash on");
+        options.setPrompt("Volume up to flash on");
         options.setBeepEnabled(true);
         options.setOrientationLocked(true);
         options.setCaptureActivity(CaptureAct.class);
@@ -92,9 +90,11 @@ public class BarCodeActivity extends AppCompatActivity {
     }
 
     ActivityResultLauncher<ScanOptions> barLuncher = registerForActivityResult(new ScanContract(), result -> {
+
+        Toast.makeText(context, "Risultato" + result.toString(), Toast.LENGTH_LONG).show();
         if(result.getContents() != null)
         {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            AlertDialog.Builder builder = new AlertDialog.Builder(BarCodeActivity.this);
             builder.setTitle("Result");
             builder.setMessage(result.getContents());
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -103,6 +103,10 @@ public class BarCodeActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
             }).show();
+        }
+        else
+        {
+            Toast.makeText(context, "Nessun risultato", Toast.LENGTH_LONG).show();
         }
     });
 
