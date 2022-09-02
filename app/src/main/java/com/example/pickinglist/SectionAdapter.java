@@ -11,45 +11,52 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 
-public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationHolder> {
+public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionHolder> {
     private Context context;
-    private ArrayList<Location> locations;
+    private ArrayList<Section> sections;
 
-    public LocationAdapter(Context context, ArrayList<Location> locations)
+    public SectionAdapter(Context context, ArrayList<Section> locations)
     {
         this.context = context;
-        this.locations = locations;
+        this.sections = locations;
     }
 
     @NonNull
     @Override
-    public LocationHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    public SectionHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         View view = LayoutInflater.from(context).inflate(R.layout.fragment_list_by_location, parent, false);
-        return new LocationHolder(view);
+        return new SectionHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LocationHolder holder, int position) {
-        Location l = locations.get(position);
-        holder.setLocation(l);
+    public void onBindViewHolder(@NonNull SectionHolder holder, int position) {
+        Section s = sections.get(position);
+        holder.setSection(s);
     }
 
     @Override
-    public int getItemCount() { return locations.size(); }
+    public int getItemCount() { return sections.size(); }
 
-    protected class LocationHolder extends RecyclerView.ViewHolder
+    public ArrayList<Section> getSections() { return sections; }
+
+    public void setSections(ArrayList<Section> sections)
+    {
+        this.sections = sections;
+        notifyDataSetChanged();
+    }
+
+
+    protected class SectionHolder extends RecyclerView.ViewHolder
     {
         private Button btnExpand;
         private TextView tvNameLocation;
         private RecyclerView rvItems;
         private  boolean isCollapsed;
 
-        public LocationHolder(@NonNull View itemView) {
+        public SectionHolder(@NonNull View itemView) {
             super(itemView);
 
             context = itemView.getContext();
@@ -80,11 +87,11 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
             });
         }
 
-        public void setLocation(Location location)
+        public void setSection(Section section)
         {
-            tvNameLocation.setText(location.getLocationName());
+            tvNameLocation.setText(section.getSectionName());
             rvItems.setLayoutManager(new LinearLayoutManager(context));
-            ArticleAdapter articleAdapter = new ArticleAdapter(context, location.getItems());
+            ArticleAdapter articleAdapter = new ArticleAdapter(context, section.getArticles());
             rvItems.setAdapter(articleAdapter);
         }
     }

@@ -93,7 +93,7 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Passo 2: Login"
+        android:text="Passo 3: Login"
         android:textColor="#3A51E6"
         android:textSize="34sp"
         android:textStyle="bold"

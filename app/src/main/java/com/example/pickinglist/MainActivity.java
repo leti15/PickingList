@@ -1,17 +1,33 @@
 package com.example.pickinglist;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.security.Permission;
+import java.util.jar.Pack200;
 
 public class MainActivity extends AppCompatActivity {
     //#region Preferences names
@@ -35,16 +51,17 @@ public class MainActivity extends AppCompatActivity {
 
     Context context;
     SharedPreferences pref;
+    ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Activity activity = this;
         context = this.getBaseContext();
         pref = getSharedPreferences("config_variables", context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-
 
         Button btnConfig = findViewById(R.id.btnConfig);
         btnConfig.setOnClickListener(new View.OnClickListener() {
@@ -56,13 +73,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        Button btnList1 = findViewById(R.id.btnList1);
-        btnList1.setOnClickListener(new View.OnClickListener() {
+        Button btnCamera = findViewById(R.id.btnList1);
+        btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (pref.getString(CONFIGURED, "false") != "false")
-                    switchActivities(VisualizeSingleList.class);
+              switchActivities(BarCodeActivity.class);
             }
         });
 
@@ -110,19 +125,5 @@ public class MainActivity extends AppCompatActivity {
         startActivity(switchActivityIntent);
         int code = switchActivityIntent.getFlags();
         Log.wtf("2", "switchActivities: return from intent with code " + code );
-    }
-
-    private void DoRequest()
-    {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            // fetch data
-        } else {
-            Toast netError = new Toast(context);
-            netError.setText("Errore di connessione");
-            netError.show();
-        }
-
     }
 }

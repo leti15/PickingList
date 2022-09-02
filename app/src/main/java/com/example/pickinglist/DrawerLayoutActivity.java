@@ -117,27 +117,40 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.sql.Array;
+import java.util.ArrayList;
 
 public class DrawerLayoutActivity extends AppCompatActivity{
 
     private Context context;
     private String[] mNavigationDrawerItemTitles;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
+    private DrawerLayout drawerLayout;
+    private ListView drawerList;
     Toolbar toolbar;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private DataModel[] drawerItem;
+    private DataModel[] drawerItems;
     ActionBarDrawerToggle mDrawerToggle;
+
+
+    RecyclerView rvObject;
+    TextView emptyPickingList;
+
+    private SectionAdapter adapterReparti;
+    private ArrayList<Article> articles;
+
+    DataApi api;
+    Toast t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,27 +159,65 @@ public class DrawerLayoutActivity extends AppCompatActivity{
         context = getApplicationContext();
 
         mTitle = mDrawerTitle = getTitle();
-        mNavigationDrawerItemTitles= getResources().getStringArray(R.array.navigation_drawer_items_array);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        Log.wtf("2", "onCreate:");
-        drawerItem = new DataModel[3];
-        drawerItem[0] = new DataModel(R.drawable.ic_menu_camera, "Connect");
-        drawerItem[1] = new DataModel(R.drawable.ic_menu_slideshow, "Fixtures");
-        drawerItem[2] = new DataModel(R.drawable.ic_menu_gallery, "Table");
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerList = (ListView) findViewById(R.id.left_drawer);
+        rvObject = findViewById(R.id.rvCompartmentList2);
+        emptyPickingList = findViewById(R.id.tvEmpty);
+        t = new Toast(context);
+
+        //todo: inserire plant e userId nel costruttore
+        api = new DataApi();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        DrawerItemCustomAdapter adapter = new DrawerItemCustomAdapter(this, R.layout.list_view_item_row, drawerItem);
-        mDrawerList.setAdapter(adapter);
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        articles = new ArrayList<Article>();
+        if(api.loadPickingLists())
+        {
+            String[] pickingListTitles = api.getPickingListTitles();
+
+            Integer[] positions = new Integer[pickingListTitles.length];
+            for (int i = 0; i < pickingListTitles.length; i++) { positions[i] = i; }
+
+            ArrayList<Section> pickingListsGroupedBySection = api.getPickingListsGroupedBySection(positions);
+            String[] sections = api.getPickingListTitlesBySection();
+
+            if(sections == null)
+            {
+                emptyPickingList.setVisibility(View.VISIBLE);
+                rvObject.setVisibility(View.GONE);
+            }
+            else
+            {
+                emptyPickingList.setVisibility(View.GONE);
+                rvObject.setVisibility(View.VISIBLE);
+
+                drawerItems = new DataModel[pickingListTitles.length];
+                for (int i = 0; i < pickingListTitles.length; i++) {
+                    drawerItems[i] = new DataModel(pickingListTitles[i]);
+                }
+
+                DrawerItemCustomAdapter adapter = new DrawerItemCustomAdapter(this, R.layout.list_view_item_row, drawerItems);
+                drawerList.setAdapter(adapter);
+
+                adapterReparti = new SectionAdapter(DrawerLayoutActivity.this, pickingListsGroupedBySection);
+                rvObject.setAdapter(adapterReparti);
+            }
+        }
+        else
+        {
+            t.setText("Errore nel caricamento delle pickingList.");
+            t.show();
+        }
+
+        drawerList.setOnItemClickListener(new DrawerItemClickListener());
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.setDrawerListener(mDrawerToggle);
 
         setupDrawerToggle();
 
-
+        rvObject.setLayoutManager(new LinearLayoutManager(this));
 
     }
 
@@ -182,8 +233,11 @@ public class DrawerLayoutActivity extends AppCompatActivity{
     private void selectItem(int position) {
 
         Toast t = new Toast(context);
-        t.setText("premuto "+ drawerItem[position].name.toString());
+        t.setText("premuto "+ drawerItems[position].name.toString());
         t.show();
+
+        Integer[] pos = new Integer[]{2,4};
+        refreshAdapter(pos);
     }
 
     @Override
@@ -213,14 +267,31 @@ public class DrawerLayoutActivity extends AppCompatActivity{
         Log.wtf("2", "setupToolbar: inizio");
 
         setSupportActionBar(toolbar);
-        Log.wtf("2", "setupToolbar: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     void setupDrawerToggle(){
-        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,toolbar,R.string.app_name, R.string.app_name);
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar,R.string.app_name, R.string.app_name);
         //This is necessary to change the icon of the Drawer Toggle upon state change.
         mDrawerToggle.syncState();
+    }
+
+    void refreshAdapter(Integer[] pickingListToVisualize)
+    {
+        ArrayList<Section> pickingListsGroupedBySection = api.getPickingListsGroupedBySection(pickingListToVisualize);
+        String[] sections = api.getPickingListTitlesBySection();
+
+        if(sections == null)
+        {
+            emptyPickingList.setVisibility(View.VISIBLE);
+            rvObject.setVisibility(View.GONE);
+        }
+        else {
+            emptyPickingList.setVisibility(View.GONE);
+            rvObject.setVisibility(View.VISIBLE);
+
+            adapterReparti.setSections(pickingListsGroupedBySection);
+        }
     }
 }

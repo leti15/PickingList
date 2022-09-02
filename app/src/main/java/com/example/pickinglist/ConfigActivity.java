@@ -1,5 +1,9 @@
 package com.example.pickinglist;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -12,12 +16,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 public class ConfigActivity extends AppCompatActivity {
 
     //#region Variables
     String nameCompany;
     EditText edCompany;
 
+    DataApi api;
     Context context;
     SharedPreferences pref;
     SharedPreferences.Editor editor;
@@ -33,6 +44,7 @@ public class ConfigActivity extends AppCompatActivity {
         //#region Inizializzazioni
         intent = getIntent();
         context = this.getBaseContext();
+        api = new DataApi();
 
         Button btnIndietro = findViewById(R.id.btnIndietroCompany);
         Button btnAvanti = findViewById(R.id.btnAvantiCompany);
@@ -41,10 +53,43 @@ public class ConfigActivity extends AppCompatActivity {
         pref = getSharedPreferences(MainActivity.PREFERENCES_FILE, context.MODE_PRIVATE);
         editor = pref.edit();
 
+        ActivityResultLauncher<Intent> activityResultLauncher;
+
         String company = pref.getString(MainActivity.COMPANY, MainActivity.NONE).toString();
         if(company != MainActivity.NONE)
             edCompany.setText(company);
         //#endregion
+
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+
+                        if (result.getResultCode() == MainActivity.OK_LOGIN) {
+                            Log.wtf("2", "onActivityResult: OK_LOGIN");
+
+                            pref = getSharedPreferences(MainActivity.PREFERENCES_FILE, context.MODE_PRIVATE);
+                            if(pref.getString(MainActivity.CONFIGURED, MainActivity.NONE).compareTo("true") == 0)
+                            {
+                                //Salvo preferencess
+                                editor.putString(MainActivity.COMPANY, nameCompany);
+                                editor.commit();
+
+                                //Setto risultato per l'intent
+                                setResult(MainActivity.OK_COMPANY, intent);
+
+                                Log.wtf("2", "onResume: finish company" );
+
+                                finish();
+                            }
+                        }
+                        else
+                        {
+                            Log.wtf("2", "onActivityResult: BAD_LOGIN");
+                        }
+                    }
+                });
 
         btnAvanti.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,8 +98,28 @@ public class ConfigActivity extends AppCompatActivity {
 
                 if(nameCompany.compareTo("") != 0)
                 {
-                    Intent switchActivityIntent = new Intent(context, ConfigActivityLogin.class);
-                    startActivityForResult(switchActivityIntent, 2);
+                    api.getPlants(company, context, new VolleyCallback(){
+                        @Override
+                        public void onSuccessResponse(String result) {
+
+                            Intent i = new Intent(context, ConfigActivityPlant.class);
+                            i.putExtra("company", nameCompany);
+                            i.putExtra("plants", result);
+                            activityResultLauncher.launch(i);
+                        }
+                    });
+                    /*JSONObject tmp = new JSONObject();
+                    JSONArray array = new JSONArray();
+
+                    for (DataApi.Plant p : api.plants[0]) {
+                        try {
+                            tmp.put("id", p.id);
+                            tmp.put("displayName", p.displayName);
+                            array.put(tmp);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }*/
                 }
                 else
                 {
@@ -81,9 +146,7 @@ public class ConfigActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == MainActivity.OK_LOGIN) {
-            Log.wtf("2", "onActivityResult: OK_LOGIN");
-
+        if (resultCode == MainActivity.OK_PLANT) {
             pref = getSharedPreferences(MainActivity.PREFERENCES_FILE, context.MODE_PRIVATE);
             if(pref.getString(MainActivity.CONFIGURED, MainActivity.NONE).compareTo("true") == 0)
             {

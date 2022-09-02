@@ -70,7 +70,7 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Passo 1: Scegli azienda"
+        android:text="Passo 1: Scegli dominio"
         android:textColor="#3A51E6"
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline7"

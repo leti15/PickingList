@@ -4,18 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
 public class VisualizeSingleList extends AppCompatActivity {
 
     RecyclerView rvObject;
-    private LocationAdapter adapter;
+    private SectionAdapter adapter;
     private ArrayList<Article> articles;
 
     @Override
@@ -35,12 +33,12 @@ public class VisualizeSingleList extends AppCompatActivity {
 
         rvObject.setLayoutManager(new LinearLayoutManager(this));
         articles = new ArrayList<Article>();
-        adapter = new LocationAdapter(VisualizeSingleList.this , getDataSource());
+        //adapter = new SectionAdapter(VisualizeSingleList.this , getDataSource());
         rvObject.setAdapter(adapter);
     }
 
 
-    private ArrayList<Location> getDataSource(){
+    /*private ArrayList<Location> getDataSource(){
         Article article = new Article(3, "sca20", "Tachipirina", 823516931, 12);
         articles.add(article);
         article = new Article(5, "sca10", "Aspirina", 821513531, 20);
@@ -77,6 +75,6 @@ public class VisualizeSingleList extends AppCompatActivity {
         locations.add(l);
 
         return locations;
-    }
+    }*/
 }
 

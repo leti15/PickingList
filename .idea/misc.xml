@@ -29,6 +29,16 @@
         <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/menu/lists_visualizer.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/menu/navigation_side_menu.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/letiz/AndroidStudioProjects/PickingList/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.196" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/activity_bar_code.xml" value="0.18478260869565216" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/activity_config.xml" value="0.20625" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/activity_config_login.xml" value="0.20625" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/activity_config_plant.xml" value="0.20625" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/activity_info.xml" value="0.3625" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/activity_main.xml" value="0.18478260869565216" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/activity_visualize_single_list.xml" value="0.3625" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/drawer_layout.xml" value="0.3625" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/fragment_compartment_list.xml" value="0.15443840579710144" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/fragment_list_by_location.xml" value="0.15443840579710144" />
       </map>
     </option>
   </component>

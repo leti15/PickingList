@@ -11,7 +11,7 @@
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Passo 3: Scegli plant"
+        android:text="Passo 2: Scegli plant"
         android:textColor="#3A51E6"
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelinePlantH"
