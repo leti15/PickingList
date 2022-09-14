@@ -26,11 +26,12 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.net.ContentHandler;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -48,9 +49,9 @@ public class DataApi {
     final boolean[] isAuthenticated = new boolean[1];
     final ArrayList<Plant>[] plants = new ArrayList[]{new ArrayList<>()};
     Long loggedUserId;
-    List<PickingList> pickingList;
+    ArrayList<PickingList> pickingList;
     ArrayList<Section> pickingListBySection;
-    Integer[] pickingListsShowed;
+    ArrayList<Integer> pickingListsShowed;
 
     RequestQueue queue;
     Context context;
@@ -72,11 +73,11 @@ public class DataApi {
     public ArrayList<Section> getPickingListBySection() { return this.pickingListBySection; }
     public void setPickingListBySection(ArrayList<Section> pickingListBySection) { this.pickingListBySection = pickingListBySection; }
 
-    public List<PickingList> getPickingLists() { return pickingList; }
+    public ArrayList<PickingList> getPickingLists() { return pickingList; }
     public void setPickingList(ArrayList<PickingList> pickingList) { this.pickingList = pickingList; }
 
-    public Integer[] getPickingListsShowed(){ return this.pickingListsShowed; }
-    public void setPickingListsShowed(Integer[] pickingListsShowed){ this.pickingListsShowed = pickingListsShowed; }
+    public ArrayList<Integer> getPickingListsShowed(){ return this.pickingListsShowed; }
+    public void setPickingListsShowed(ArrayList<Integer> pickingListsShowed){ this.pickingListsShowed = pickingListsShowed; }
     //#endregion
 
     /** Verifica le credenziali inserite dall'utente
@@ -189,32 +190,33 @@ public class DataApi {
         //connessione al db e carica in "pickingList" tutte le pickinglist del plant
 
         this.pickingList = new ArrayList<PickingList>();
+        this.pickingListsShowed = new ArrayList<>();
 
         List<Article> a =  new ArrayList<>();
 
-        a.add(new Article(5, "sca","brufen 300",  234435, 20, new Location(1,3,"B")));
-        a.add(new Article(10, "sca","zirtec",  223345, 20, new Location(9,5, "F")));
+        a.add(new Article(5, "sca","brufen 300", "234435", 20, new Location("B", "sezione", 1, "scaffale", 3, "ripiano", 5, "cassetto")));
+        a.add(new Article(10, "sca","zirtec",  "223345", 20, new Location("A", "sezione", 6, "scaffale", 2, "ripiano", 7, "cassetto")));
         PickingList p = new PickingList("reparto1", a);
         this.pickingList.add(p);
 
         a =  new ArrayList<>();
-        a.add( new Article(1, "sca20", "tachipirina 1000", 2345, 20, new Location(25, 7, "Q")));
-        a.add(new Article(5, "sca10","oki",  234435, 20, new Location(8,10, "H")));
-        a.add(new Article(10, "sca","gaviscon",  223345, 20, new Location(5, 3, "A")));
+        a.add( new Article(1, "sca20", "tachipirina 1000", "2345", 20, new Location("Q", "sezione", 27, "scaffale", 7, "ripiano", 4, "cassetto")));
+        a.add(new Article(5, "sca10","oki",  "234435", 20, new Location("H", "sezione", 8, "scaffale", 10, "ripiano", 3, "cassetto")));
+        a.add(new Article(10, "sca","gaviscon",  "223345", 20, new Location("A", "sezione", 10, "scaffale", 2, "ripiano", 1, "cassetto")));
         p = new PickingList("reparto2", a);
         this.pickingList.add(p);
 
         a =  new ArrayList<>();
-        a.add( new Article(1, "sca50", "tachidol", 2345, 20, new Location(6,1, "C")));
-        a.add(new Article(5, "sca","oki task",  234435, 20, new Location(2, 15, "F")));
-        a.add(new Article(10, "sca50","moment",  223345, 20, new Location(4, 20, "D")));
+        a.add( new Article(1, "sca50", "tachidol", "2345", 20, new Location("C", "sezione", 10, "scaffale", 11, "ripiano", 1, "cassetto")));
+        a.add(new Article(5, "sca","oki task",  "234435", 20, new Location("F", "sezione", 20, "scaffale", 9, "ripiano", 6, "cassetto")));
+        a.add(new Article(10, "sca50","moment",  "223345", 20, new Location("H", "sezione", 12, "scaffale", 3, "ripiano", 5, "cassetto")));
         p = new PickingList("reparto3", a);
         this.pickingList.add(p);
 
         a =  new ArrayList<>();
-        a.add( new Article(1, "sca", "buscopan", 2345, 20, new Location(2, 1, "C")));
-        a.add(new Article(5, "sca20","brufen 600",  234435, 20, new Location(5,9, "B")));
-        a.add(new Article(10, "sca","tachipirina 500",  223345, 20, new Location(4, 22, "A")));
+        a.add( new Article(1, "sca", "buscopan", "2345", 20, new Location("C", "sezione", 8, "scaffale", 2, "ripiano", 2, "cassetto")));
+        a.add(new Article(5, "sca20","brufen 600",  "234435", 20, new Location("Q", "sezione", 1, "scaffale", 15, "ripiano", 6, "cassetto")));
+        a.add(new Article(10, "sca","tachipirina 500",  "8001120599469", 20, new Location("A", "sezione", 4, "scaffale", 5, "ripiano", 13, "cassetto")));
         p = new PickingList("reparto4", a);
         this.pickingList.add(p);
 
@@ -225,15 +227,27 @@ public class DataApi {
      * @param positions: indici delle picking lists da considerare;
      * @return lista di sezioni con dentro articoli.
      * **/
-    public ArrayList<Section> getPickingListsGroupedBySection(Integer[] positions)
+    public ArrayList<Section> getPickingListsGroupedBySection(Integer... positions)
     {
-        this.pickingListsShowed = positions;
+        for (Integer p : positions) {
+            if(this.pickingListsShowed.contains(p))
+                this.pickingListsShowed.remove(p);
+            else
+                this.pickingListsShowed.add(p);
+        }
 
-        if(!this.pickingList.isEmpty() && positions.length != 0)
+        ArrayList<Integer> pickingListIndexes = new ArrayList<>();
+        if(this.pickingListsShowed.size() == 0)
+            for (int i = 0; i < this.pickingList.size(); i++)
+                pickingListIndexes.add(i);
+        else
+            pickingListIndexes = this.pickingListsShowed;
+
+        if(!pickingListIndexes.isEmpty())
         {
             ArrayList<Section> sections = new ArrayList<Section>();
 
-            for (Integer p : positions) {
+            for (Integer p : pickingListIndexes) {
                 if(p < this.pickingList.size() && p >= 0)
                 {
                     for (Article a : this.pickingList.get(p).articles)
@@ -259,6 +273,7 @@ public class DataApi {
                 }
             }
 
+           // Section.orderByShelvingUnit(sections);
             this.pickingListBySection = sections;
             return sections;
         }
@@ -325,56 +340,6 @@ public class DataApi {
         return true;
     }
 
-    public void getResponseLight(String url, JSONObject jsonValue, final VolleyCallback callback) {
-
-        queue = Volley.newRequestQueue(context);
-        JsonObjectRequest request = new JsonObjectRequest(url, jsonValue,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        if (null != response) {
-                            callback.onSuccessResponse(response.toString());
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.wtf("2", "onErrorResponse: " + error.getMessage() );
-            }
-        });
-        queue.add(request);
-    }
-
-  public void getResponse(int method, String url, JSONObject jsonValue, final VolleyCallback callback) {
-
-        queue = MySingleton.getInstance(context).getRequestQueue();
-
-        StringRequest strreq = new StringRequest(Request.Method.GET, url, new Response.Listener < String > () {
-
-            @Override
-            public void onResponse(String Response) {
-                //callback.onSuccessResponse(Response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError e) {
-                e.printStackTrace();
-                Toast.makeText(context, e + "error", Toast.LENGTH_LONG).show();
-            }
-        })
-        {
-            // set headers
-            @Override
-            public Map< String, String > getHeaders() throws com.android.volley.AuthFailureError {
-                Map < String, String > params = new HashMap< String, String >();
-               // params.put("Authorization: Basic", TOKEN);
-                params.put("Authorization: Basic", authKey);
-                return params;
-            }
-        };
-        MySingleton.getInstance(context).addToRequestQueue(strreq);
-    }
-
     public static class PickingList
     {
         String name;
@@ -388,6 +353,8 @@ public class DataApi {
             this.articles = articles;
             this.id = Long.valueOf(0);
         }
+
+        public List<Article> getArticles() {  return articles; }
     }
 
     public static class Plant

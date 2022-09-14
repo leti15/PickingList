@@ -36,9 +36,13 @@
         <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/activity_info.xml" value="0.3625" />
         <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/activity_main.xml" value="0.18478260869565216" />
         <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/activity_visualize_single_list.xml" value="0.3625" />
-        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/drawer_layout.xml" value="0.3625" />
-        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/fragment_compartment_list.xml" value="0.15443840579710144" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/drawer_layout.xml" value="0.22" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/fragment_compartment_list.xml" value="0.25" />
         <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/fragment_list_by_location.xml" value="0.15443840579710144" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/list_view_item_row.xml" value="0.1762917933130699" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/recicler_object.xml" value="0.67" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/layout/toolbar.xml" value="0.18659420289855072" />
+        <entry key="..\:/Users/letizia.gorini/Documents/Picking List App/PickingList/app/src/main/res/menu/navigation_side_menu.xml" value="0.3569230769230769" />
       </map>
     </option>
   </component>

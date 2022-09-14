@@ -12,15 +12,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionHolder> {
     private Context context;
     private ArrayList<Section> sections;
+    private ArrayList<ArticleAdapter> articleAdapterList;
 
     public SectionAdapter(Context context, ArrayList<Section> locations)
     {
         this.context = context;
         this.sections = locations;
+        this.articleAdapterList = new ArrayList<ArticleAdapter>();
     }
 
     @NonNull
@@ -46,6 +49,13 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionH
     {
         this.sections = sections;
         notifyDataSetChanged();
+        updateArticleAdapterList();
+    }
+
+    public void updateArticleAdapterList ()
+    {
+        for (ArticleAdapter a : this.articleAdapterList)
+            a.notifyDataSetChanged();
     }
 
 
@@ -92,6 +102,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionH
             tvNameLocation.setText(section.getSectionName());
             rvItems.setLayoutManager(new LinearLayoutManager(context));
             ArticleAdapter articleAdapter = new ArticleAdapter(context, section.getArticles());
+            articleAdapterList.add(articleAdapter);
             rvItems.setAdapter(articleAdapter);
         }
     }

@@ -1,7 +1,6 @@
 package com.example.pickinglist;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,8 +53,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleH
         private CheckBox cbFinished;
         private Button btnAdd, btnMinus;
         private EditText edQta;
-        private TextView tvNeed;
-        private TextView tvMaxQta;
+        private TextView tvLocation;
+        private TextView tvQtaNeed;
 
         public ArticleHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,8 +64,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleH
             btnAdd = itemView.findViewById(R.id.btnAdd);
             btnMinus = itemView.findViewById(R.id.btnMinus);
             edQta = itemView.findViewById(R.id.edQta);
-            tvNeed = itemView.findViewById(R.id.tvNeed);
-            tvMaxQta = itemView.findViewById(R.id.tvMaxQta);
+            tvLocation = itemView.findViewById(R.id.tvArticleLocation);
+            tvQtaNeed = itemView.findViewById(R.id.tvQtaNeed);
 
             cbFinished.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -110,11 +109,13 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleH
             this.maxQta = article.GetRemainingQta();
             this.cbFinished.setText( article.GetName() );
             this.edQta.setText( String.valueOf(article.GetQta()) );
-            this.tvMaxQta.setText( "Max. " + String.valueOf( article.GetRemainingQta() ) + " " + article.GetMeasureUnits() );
-            this.tvNeed.setText( "Servono " + String.valueOf( article.GetNeedingQta() ) + " " +  article.GetMeasureUnits() );
+
+            this.tvLocation.setText(article.GetLocationStringForAdapter());
+            this.tvQtaNeed.setText( "Servono " + String.valueOf( article.GetNeedingQta() ) + " " +  article.GetMeasureUnits() );
             this.qtaNeed = article.GetNeedingQta();
         }
 
 
     }
 }
+
