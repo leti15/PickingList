@@ -4,40 +4,21 @@ package com.example.pickinglist;
 **/
 
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.ContentHandler;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 
 public class DataApi {
     String webApiClass = "PickingListMobileApiWebApi";
@@ -45,7 +26,7 @@ public class DataApi {
     String url = "https://letizia.ngrok.io/api/PickingListMobileApiWebApi/";
     String domine;
 
-    Plant plant;
+    String plantName;
     final boolean[] isAuthenticated = new boolean[1];
     final ArrayList<Plant>[] plants = new ArrayList[]{new ArrayList<>()};
     Long loggedUserId;
@@ -56,16 +37,24 @@ public class DataApi {
     RequestQueue queue;
     Context context;
 
+    /*
+    Stati PickingList:
+        - Aperto
+        - Da prelevare
+        - In prelievo
+        - Prelevato
+        - Annullato
+*/
+
     public DataApi() { }
-    public DataApi(Plant plant, Long userId)
+    public DataApi(String plant)
     {
-        this.plant = plant;
-        this.loggedUserId = userId;
+        this.plantName = plant;
     }
 
     //#region Setter & Getter
-    public Plant getPlant() { return plant; }
-    public void setPlant(Plant p) { this.plant = p; }
+    public String getPlantName() { return plantName; }
+    public void setPlantName(String p) { this.plantName = p; }
 
     public Long getLoggedUserId() { return loggedUserId; }
     public void setLoggedUserId(Long loggedUserId) { this.loggedUserId = loggedUserId; }
@@ -147,20 +136,7 @@ public class DataApi {
                         public void onResponse(JSONObject response) {
                             if (null != response) {
                                 try {
-                                    //handle your response
-                                    Log.wtf("2", "onResponse: " + response.get("plants"));
-
                                     callback.onSuccessResponse(response.get("plants").toString());
-
-                                  /*  plants[0] = new ArrayList<Plant>();
-                                    JSONArray array = new JSONArray(response.get("plants").toString());
-                                    JSONObject obj;
-                                    for (int i = 0; i < array.length(); i++) {
-                                        obj = new JSONObject(array.getJSONObject(i).toString());
-                                        plants[0].add(new Plant(obj.getString("name"), obj.getLong("id")));
-                                    }
-
-                                    Log.wtf("2", "onResponse: " + plants[0].toString());*/
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -185,42 +161,44 @@ public class DataApi {
      * @return true: se le carica correttamente;
      * @return false: se non riesce a caricarle.
      * **/
-    public boolean loadPickingLists()
+    public void loadPickingLists(Context context, VolleyCallback callback)
     {
         //connessione al db e carica in "pickingList" tutte le pickinglist del plant
 
         this.pickingList = new ArrayList<PickingList>();
         this.pickingListsShowed = new ArrayList<>();
 
-        List<Article> a =  new ArrayList<>();
+        try {
+            RequestQueue queue = Volley.newRequestQueue(context);
+            JSONObject object = new JSONObject();
+            object.put("AuthKey", authKey);
+            object.put("PlantName", plantName);
 
-        a.add(new Article(5, "sca","brufen 300", "234435", 20, new Location("B", "sezione", 1, "scaffale", 3, "ripiano", 5, "cassetto")));
-        a.add(new Article(10, "sca","zirtec",  "223345", 20, new Location("A", "sezione", 6, "scaffale", 2, "ripiano", 7, "cassetto")));
-        PickingList p = new PickingList("reparto1", a);
-        this.pickingList.add(p);
+            JsonObjectRequest request = new JsonObjectRequest(url + "GetPickingLists", object,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            if (null != response) {
+                                try {
+                                    callback.onSuccessResponse(response.get("pickingLists").toString());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }, new Response.ErrorListener() {
 
-        a =  new ArrayList<>();
-        a.add( new Article(1, "sca20", "tachipirina 1000", "2345", 20, new Location("Q", "sezione", 27, "scaffale", 7, "ripiano", 4, "cassetto")));
-        a.add(new Article(5, "sca10","oki",  "234435", 20, new Location("H", "sezione", 8, "scaffale", 10, "ripiano", 3, "cassetto")));
-        a.add(new Article(10, "sca","gaviscon",  "223345", 20, new Location("A", "sezione", 10, "scaffale", 2, "ripiano", 1, "cassetto")));
-        p = new PickingList("reparto2", a);
-        this.pickingList.add(p);
-
-        a =  new ArrayList<>();
-        a.add( new Article(1, "sca50", "tachidol", "2345", 20, new Location("C", "sezione", 10, "scaffale", 11, "ripiano", 1, "cassetto")));
-        a.add(new Article(5, "sca","oki task",  "234435", 20, new Location("F", "sezione", 20, "scaffale", 9, "ripiano", 6, "cassetto")));
-        a.add(new Article(10, "sca50","moment",  "223345", 20, new Location("H", "sezione", 12, "scaffale", 3, "ripiano", 5, "cassetto")));
-        p = new PickingList("reparto3", a);
-        this.pickingList.add(p);
-
-        a =  new ArrayList<>();
-        a.add( new Article(1, "sca", "buscopan", "2345", 20, new Location("C", "sezione", 8, "scaffale", 2, "ripiano", 2, "cassetto")));
-        a.add(new Article(5, "sca20","brufen 600",  "234435", 20, new Location("Q", "sezione", 1, "scaffale", 15, "ripiano", 6, "cassetto")));
-        a.add(new Article(10, "sca","tachipirina 500",  "8001120599469", 20, new Location("A", "sezione", 4, "scaffale", 5, "ripiano", 13, "cassetto")));
-        p = new PickingList("reparto4", a);
-        this.pickingList.add(p);
-
-        return true;
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.wtf("2", "onErrorResponse: " + error.getMessage() );
+                }
+            });
+            queue.add(request);
+        }
+        catch (Exception e)
+        {
+            Log.wtf("2", e.getMessage());
+        }
     }
 
     /** Cerca le picking lists di determinati indici e ritorna le sezioni con all'interno gli articoli delle picking lists in input
@@ -255,7 +233,8 @@ public class DataApi {
                         boolean isNewSection = true;
                         for (Section s : sections)
                         {
-                            if(s.sectionName == a.GetLocation().getSection())
+                            String sectionName = a.getLocation().getStorageUnit(0);
+                            if(s.sectionName.compareTo(sectionName) == 0)
                             {
                                 s.getArticles().add(a);
                                 isNewSection = false;
@@ -266,7 +245,7 @@ public class DataApi {
                         {
                             ArrayList<Article> articles = new ArrayList<Article>(){};
                             articles.add(a);
-                            Section newSection = new Section(a.GetLocation().getSection(), articles);
+                            Section newSection = new Section(a.getLocation().getStorageUnit(0), articles);
                             sections.add(newSection);
                         }
                     }
@@ -315,45 +294,124 @@ public class DataApi {
         return titles;
     }
 
-    /** Collegandosi al server elimina una picking list
-     * @param  id: identificativo della picking list da eliminare;
-     * @return true: se la rimuove correttamente;
-     * @return false: se non riesce a rimuoverla.
+    /** Collegandosi al server salva tutte le pickingLists
      * **/
-    public boolean removePickingList(Long id)
+    public void savePickingLists(Context context)
     {
         //connessione al db e elimina la pickinglist
 
-        return true;
+        try {
+            RequestQueue queue = Volley.newRequestQueue(context);
+            JSONObject object = new JSONObject();
+            object.put("AuthKey", authKey);
+            object.put("Plant", plantName);
+            object.put ("PickingLists", builPickingListForServer());
+
+            JsonObjectRequest request = new JsonObjectRequest(url + "Save", object,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            if (null != response) {
+                                try {
+                                    boolean e = response.getBoolean("success");
+
+                                    if(e)
+                                        Toast.makeText(context, "Salvataggio picking lists completato", Toast.LENGTH_SHORT).show();
+                                    else
+                                        Toast.makeText(context, "Salvataggio picking lists non andato a buon fine", Toast.LENGTH_SHORT).show();
+
+                                } catch (JSONException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.wtf("2", "onErrorResponse: " + error.getMessage() );
+                }
+            });
+            queue.add(request);
+        }
+        catch (Exception e)
+        {
+            Log.wtf("2", "getPlants: " + e.getMessage() );
+        }
+
     }
 
-    /** Collegandosi al server modifica una picking list
-     * @param id: identificativo della picking list da modificare;
-     * @param newArticles: nuovi articoli della picking list;
-     * @return true: se la modifica correttamente;
-     * @return false: se non riesce a modificarla.
-     * **/
-    public boolean modifyPickingList(Long id, List<Article> newArticles)
-    {
-        //connessione al db e elimina la pickinglist
+    private JSONArray builPickingListForServer() {
 
-        return true;
+        JSONArray pickingListArray = new JSONArray();
+        JSONObject pickingListObj;
+        JSONArray articlesArray;
+        JSONObject articleObj;
+        JSONObject locationObj;
+        try {
+            for (PickingList pickingList: this.pickingList)
+            {
+                pickingListObj = new JSONObject();
+                articlesArray = new JSONArray();
+
+                for (Article article : pickingList.getArticles())
+                {
+                    articleObj = new JSONObject();
+                    locationObj = new JSONObject();
+
+                    Location location = article.getLocation();
+                    locationObj.put("id", location.getId());
+                    locationObj.put("code", location.getCode());
+                    locationObj.put("name", location.getName());
+                    locationObj.put("warehouseId", location.getWarehouseId());
+                    locationObj.put("plantId", location.getPlantId());
+                    locationObj.put("parentId", location.getParentId());
+
+                    articleObj.put("id", article.getId());
+                    articleObj.put("qta", article.getNeedingQta());
+                    articleObj.put("measureUnit", article.getMeasureUnit());
+                    articleObj.put("name", article.getName());
+                    articleObj.put("registerCode", article.getRegisterCode());
+                    articleObj.put("location", location);
+
+                    articlesArray.put(articleObj);
+                }
+
+                pickingListObj.put("id", pickingList.getId());
+                pickingListObj.put("name", pickingList.getName());
+                pickingListObj.put("articles", articlesArray);
+
+                pickingListArray.put(pickingListObj);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return pickingListArray;
     }
 
     public static class PickingList
     {
-        String name;
         Long id;
+        String name;
         List<Article> articles;
 
+        //Constructor
         public PickingList(){}
-        public PickingList(String name, List<Article> articles)
+        public PickingList(long id, String name, List<Article> articles)
         {
             this.name = name;
             this.articles = articles;
-            this.id = Long.valueOf(0);
+            this.id = id;
         }
 
+        //Getters & Setters
+        public Long getId() {
+            return id;
+        }
+        public String getName() {
+            return name;
+        }
         public List<Article> getArticles() {  return articles; }
     }
 

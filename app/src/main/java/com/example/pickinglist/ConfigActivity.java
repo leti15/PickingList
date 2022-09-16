@@ -108,18 +108,6 @@ public class ConfigActivity extends AppCompatActivity {
                             activityResultLauncher.launch(i);
                         }
                     });
-                    /*JSONObject tmp = new JSONObject();
-                    JSONArray array = new JSONArray();
-
-                    for (DataApi.Plant p : api.plants[0]) {
-                        try {
-                            tmp.put("id", p.id);
-                            tmp.put("displayName", p.displayName);
-                            array.put(tmp);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }*/
                 }
                 else
                 {

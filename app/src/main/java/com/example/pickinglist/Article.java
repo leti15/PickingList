@@ -1,45 +1,46 @@
 package com.example.pickinglist;
 
 public class Article {
+    private long id;
     private int qta;
     private int needingQta;
     private String measureUnit;
     private String name;
-    private String id;
+    private String registerCode;
     private Location location;
 
-
-
-
     //Constructor
-    public Article( int need, String unit, String name, String id, int avaiable, Location location)
+    public Article(long id, int need, String unit, String name, String registerCode, Location location)
     {
+        this.id = id;
         this.qta = 0;
         this.needingQta = need;
         this.measureUnit = unit;
         this.name = name;
-        this.id = id;
+        this.registerCode = registerCode;
         this.location = location;
     }
-    //Getters
-    public int GetQta(){
+
+    //Getters & Setters
+    public int getQta(){
         return this.qta;
     }
-    public void SetQta(int qta){ this.qta = qta; }
-    public int GetNeedingQta(){
+    public void setQta(int qta){ this.qta = qta; }
+    public int getNeedingQta(){
         return this.needingQta;
     }
-    public String GetMeasureUnits(){
+    public String getMeasureUnit(){
         return this.measureUnit;
     }
-    public String GetName(){
+    public String getName(){
         return this.name;
     }
-    public String Getid(){ return this.id; }
-    public Location GetLocation(){return this.location;}
-    public String GetLocationStringForAdapter()
-    {
-        return this.location.getLocationToStringCostumize(false, true, true, true, false);
+    public String getRegisterCode(){ return this.registerCode; }
+    public Location getLocation(){return this.location;}
+    public long getId() {
+        return id;
     }
-
+    public void setId(long id) {
+        this.id = id;
+    }
 }

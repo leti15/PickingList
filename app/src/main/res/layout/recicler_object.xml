@@ -9,77 +9,73 @@
         android:id="@+id/btnAdd"
         android:layout_width="50dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginEnd="8dp"
         android:text="+"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvQtaNeed"
         app:layout_constraintStart_toEndOf="@+id/edQta"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/cbArticle" />
 
     <CheckBox
         android:id="@+id/cbArticle"
-        android:layout_width="110dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
+        android:layout_width="225dp"
+        android:layout_height="56dp"
         android:text="CheckBox"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnMinus"
         app:layout_constraintEnd_toStartOf="@+id/tvArticleLocation"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/btnMinus"
         android:layout_width="50dp"
         android:layout_height="40dp"
+        android:layout_marginStart="32dp"
         android:text="-"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/edQta"
-        app:layout_constraintStart_toEndOf="@+id/tvArticleLocation"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cbArticle" />
 
     <EditText
         android:id="@+id/edQta"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:text="Qta"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnAdd"
         app:layout_constraintStart_toEndOf="@+id/btnMinus"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/cbArticle" />
 
     <TextView
         android:id="@+id/tvArticleLocation"
-        android:layout_width="100dp"
-        android:layout_height="41dp"
+        android:layout_width="173dp"
+        android:layout_height="56dp"
         android:inputType="textMultiLine"
         android:text="TextView"
         android:textAlignment="center"
         android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnMinus"
-        app:layout_constraintHorizontal_bias="0.346"
+        app:layout_constraintBottom_toTopOf="@+id/btnAdd"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cbArticle"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.567"
         tools:flow_verticalAlign="center" />
 
     <TextView
         android:id="@+id/tvQtaNeed"
-        android:layout_width="148dp"
-        android:layout_height="21dp"
+        android:layout_width="197dp"
+        android:layout_height="29dp"
         android:text="TextView"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/edQta"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.942"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toEndOf="@+id/btnAdd"
+        app:layout_constraintTop_toBottomOf="@+id/tvArticleLocation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

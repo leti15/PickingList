@@ -1,24 +1,21 @@
 package com.example.pickinglist;
+import static com.example.pickinglist.MainActivity.CONFIGURED;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
-import android.provider.MediaStore;
 import android.util.Log;
-import android.util.SparseLongArray;
-import android.view.ActionMode;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,9 +34,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
-import java.sql.Array;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class DrawerLayoutActivity extends AppCompatActivity{
     public static int CAMERA_PERMISSION_CODE = 1;
@@ -47,6 +46,10 @@ public class DrawerLayoutActivity extends AppCompatActivity{
 
     private Context context;
     private Activity activity;
+
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
+
     private String[] mNavigationDrawerItemTitles;
     private DrawerLayout drawerLayout;
     private ListView drawerList;
@@ -56,10 +59,12 @@ public class DrawerLayoutActivity extends AppCompatActivity{
     private DataModel[] drawerItems;
     ActionBarDrawerToggle mDrawerToggle;
 
+    String namePlant;
 
     RecyclerView rvObject;
     TextView emptyPickingList;
     FloatingActionButton scanBarCode;
+    Button btnSave;
 
     private SectionAdapter adapterReparti;
     private ArrayList<Article> articles;
@@ -72,7 +77,10 @@ public class DrawerLayoutActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_layout);
         context = getApplicationContext();
+        pref = getSharedPreferences(MainActivity.PREFERENCES_FILE, context.MODE_PRIVATE);
+        editor = pref.edit();
 
+        t = new Toast(context);
         mTitle = mDrawerTitle = getTitle();
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -80,6 +88,8 @@ public class DrawerLayoutActivity extends AppCompatActivity{
         rvObject = findViewById(R.id.rvCompartmentList2);
         emptyPickingList = findViewById(R.id.tvEmpty);
         scanBarCode = findViewById(R.id.fabScan);
+        btnSave = findViewById(R.id.btnSave);
+
         scanBarCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,16 +97,148 @@ public class DrawerLayoutActivity extends AppCompatActivity{
             }
         });
 
-        t = new Toast(context);
-
-        //todo: inserire plant e userId nel costruttore
-        api = new DataApi();
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(api != null && !api.getPickingLists().isEmpty())
+                    api.savePickingLists(context);
+                else
+                    Toast.makeText(context, "Nulla da salvare.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        articles = new ArrayList<Article>();
-        if(api.loadPickingLists())
+        refreshPickingLists();;
+
+        drawerList.setOnItemClickListener(new DrawerItemClickListener());
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.setDrawerListener(mDrawerToggle);
+
+        setupDrawerToggle();
+
+        rvObject.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            refreshAdapter(position);
+        }
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+
+            Log.e("onOptionsItemSelected", item.toString());
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getSupportActionBar().setTitle(mTitle);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    void setupDrawerToggle(){
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar,R.string.app_name, R.string.app_name);
+        mDrawerToggle.syncState();
+    }
+
+    void updateArticles(String articleId, String qta)
+    {
+        boolean articleFound = false;
+        ArrayList<DataApi.PickingList> pickingListList =  api.getPickingLists();
+
+        for (int i = 0; i< pickingListList.size(); i++){
+            DataApi.PickingList pickingList = pickingListList.get(i);
+            if(api.pickingListsShowed.contains(i) || api.pickingListsShowed.isEmpty())
+                for (Article article : pickingList.getArticles())
+                    if(article.getRegisterCode().compareTo(articleId) == 0)
+                    {
+                        articleFound = true;
+                        article.setQta(Integer.valueOf(qta));
+                    }
+        }
+
+        if(!articleFound)
+            Toast.makeText(context, "Prodotto con matricola " + articleId + " non trovato.", Toast.LENGTH_LONG).show();
+
+        api.setPickingList(pickingListList);
+        adapterReparti.setSections(api.getPickingListsGroupedBySection());
+    }
+
+    void refreshPickingLists()
+    {
+        namePlant = pref.getString(MainActivity.PLANT, MainActivity.NONE);
+        if(namePlant.compareTo(MainActivity.NONE) ==0)
+            Toast.makeText(context, "Prima esegui la configurazione.", Toast.LENGTH_SHORT).show();
+
+        api = new DataApi(namePlant);
+
+        api.loadPickingLists(context, new VolleyCallback() {
+            @Override
+            public void onSuccessResponse(String result) {
+
+                ArrayList<DataApi.PickingList> pickingLists = new ArrayList<>(); //array di picking list
+                ArrayList<Article> articleList = new ArrayList<>(); //array di article
+                JSONArray array = null;
+                try {
+                    array = new JSONArray(result);
+                    JSONObject obj;
+                    for (int i = 0; i < array.length(); i++) {
+                        obj = new JSONObject(array.getJSONObject(i).toString()); //una pickingList
+
+                        JSONArray articles = new JSONArray(obj.getString("articles")); //array di articoli
+                        articleList = new ArrayList<Article>();
+                        for (int j = 0; j < articles.length(); j++)
+                        {
+                            JSONObject objArticle = new JSONObject(articles.getString(j));
+                            JSONObject objLocation = new JSONObject(objArticle.getString("location"));
+
+                            ArrayList<Location> path = new ArrayList<Location>();
+                            JSONArray objLocationPath = new JSONArray(objLocation.getString("path"));
+                            for (int k = 1; k < objLocationPath.length(); k++) {
+                                JSONObject tmpLocation = new JSONObject(objLocationPath.get(k).toString()); //singola location in path
+                                Location l = new Location(tmpLocation.getLong("id"), tmpLocation.getLong("warehouseId"), tmpLocation.getString("code"), tmpLocation.getString("name"), tmpLocation.getLong("plantId"), tmpLocation.getLong("parentId"), null );
+                                path.add(l);
+                            }
+
+                            Location location = new Location(objLocation.getLong("id"), objLocation.getLong("warehouseId"), objLocation.getString("code"), objLocation.getString("name"), objLocation.getLong("plantId"), objLocation.getLong("parentId"), path) ;
+                            Article tmpArticle = new Article(objArticle.getLong("id"), objArticle.getInt("needingQta"), objArticle.getString("measureUnit"), objArticle.getString("name"), objArticle.getString("registerCode"), location);
+                            articleList.add(tmpArticle);
+                        }
+                        DataApi.PickingList p = new DataApi.PickingList(obj.getLong("id"), obj.getString("name"), articleList);
+
+                        pickingLists.add(p);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                api.setPickingList(pickingLists);
+                onLoadPickingList();
+            }
+        });
+
+        onLoadPickingList();
+    }
+
+    void onLoadPickingList()
+    {
+        if(!api.pickingList.isEmpty())
         {
             String[] pickingListTitles = api.getPickingListTitles();
 
@@ -127,97 +269,13 @@ public class DrawerLayoutActivity extends AppCompatActivity{
                 rvObject.setAdapter(adapterReparti);
             }
         }
-        else
-        {
-            t.setText("Errore nel caricamento delle pickingList.");
-            t.show();
-        }
-
-        drawerList.setOnItemClickListener(new DrawerItemClickListener());
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerLayout.setDrawerListener(mDrawerToggle);
-
-        setupDrawerToggle();
-
-        rvObject.setLayoutManager(new LinearLayoutManager(this));
-    }
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-
-    }
-
-    private void selectItem(int position) {
-
-        Toast t = new Toast(context);
-        t.setText("premuto "+ drawerItems[position].name.toString());
-        t.show();
-
-        refreshAdapter(position);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-
-            Log.e("onOptionsItemSelected", item.toString());
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        getSupportActionBar().setTitle(mTitle);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
-    }
-
-    void setupToolbar(){
-        Log.wtf("2", "setupToolbar: inizio");
-
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-    }
-
-    void setupDrawerToggle(){
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar,R.string.app_name, R.string.app_name);
-        //This is necessary to change the icon of the Drawer Toggle upon state change.
-        mDrawerToggle.syncState();
-    }
-
-    void updateArticles(String articleId, String qta)
-    {
-        ArrayList<DataApi.PickingList> pickingListList =  api.getPickingLists();
-
-        for (DataApi.PickingList pickingList: pickingListList){
-            for (Article article : pickingList.getArticles()){
-                if(article.Getid().compareTo(articleId) == 0)
-                    article.SetQta(Integer.valueOf(qta));
-            }
-        }
-
-        api.setPickingList(pickingListList);
-        adapterReparti.setSections(api.getPickingListsGroupedBySection());
     }
 
     void refreshAdapter(Integer pickingListToVisualize)
     {
         ArrayList<Section> pickingListsGroupedBySection = api.getPickingListsGroupedBySection(pickingListToVisualize);
-        String[] sections = api.getPickingListTitlesBySection();
 
-        if(sections == null)
+        if(pickingListsGroupedBySection.isEmpty())
         {
             emptyPickingList.setVisibility(View.VISIBLE);
             rvObject.setVisibility(View.GONE);
@@ -244,6 +302,7 @@ public class DrawerLayoutActivity extends AppCompatActivity{
         if(result.getContents() != null)
         {
             final EditText builderInput = new EditText(DrawerLayoutActivity.this);
+            builderInput.setRawInputType(Configuration.KEYBOARD_QWERTY);
             AlertDialog.Builder builder = new AlertDialog.Builder(DrawerLayoutActivity.this);
 
             String articleId = result.getContents();

@@ -1,6 +1,7 @@
 package com.example.pickinglist;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
+import javax.microedition.khronos.egl.EGLDisplay;
 
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleHolder> {
 
@@ -67,6 +70,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleH
             tvLocation = itemView.findViewById(R.id.tvArticleLocation);
             tvQtaNeed = itemView.findViewById(R.id.tvQtaNeed);
 
+            edQta.setRawInputType(Configuration.KEYBOARD_QWERTY);
+
             cbFinished.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v)
@@ -99,20 +104,19 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleH
                 public void onClick(View view) {
                     Integer x = Integer.parseInt(String.valueOf(edQta.getText()));
 
-                    if(x != maxQta)
-                        edQta.setText(String.valueOf(x+1));
+                    edQta.setText(String.valueOf(x+1));
                 }
             });
         }
 
         public void setArticle(Article article){
-            this.maxQta = article.GetRemainingQta();
-            this.cbFinished.setText( article.GetName() );
-            this.edQta.setText( String.valueOf(article.GetQta()) );
+            this.cbFinished.setText( article.getName() + ": " + article.getRegisterCode());
+            this.edQta.setText( String.valueOf(article.getQta()) );
 
-            this.tvLocation.setText(article.GetLocationStringForAdapter());
-            this.tvQtaNeed.setText( "Servono " + String.valueOf( article.GetNeedingQta() ) + " " +  article.GetMeasureUnits() );
-            this.qtaNeed = article.GetNeedingQta();
+            String s = article.getLocation().getLocationToStringCostumize();
+            this.tvLocation.setText(s);
+            this.tvQtaNeed.setText( "Servono " + String.valueOf( article.getNeedingQta() ) + " " +  article.getMeasureUnit() );
+            this.qtaNeed = article.getNeedingQta();
         }
 
 

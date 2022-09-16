@@ -83,24 +83,6 @@ public class ConfigActivityPlant extends AppCompatActivity implements AdapterVie
         } catch (JSONException e) {
             e.printStackTrace();
         }
-/*
-        JSONArray plantsFromJson = null;
-        ArrayList<DataApi.Plant> plants = new ArrayList<>(); //array di Plant <String,Long>
-        ArrayList<String> plantsDisplayNames = new ArrayList<>(); //array di nomi dei Plants <String>
-        try {
-            plantsFromJson = new JSONArray(intent.getExtras().getString("plants"));
-            JSONObject obj;
-
-            for (int i = 0; i < plantsFromJson.length(); i++) {
-                obj = (JSONObject) plantsFromJson.get(i);
-                String displayName = obj.getString("displayName");
-                Long id = obj.getLong("id");
-                plants.add(new DataApi.Plant(displayName, id));
-                plantsDisplayNames.add(displayName);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
         //#endregion
 
         spPlant.setOnItemSelectedListener(this);

@@ -73,16 +73,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button btnCamera = findViewById(R.id.btnList1);
-        btnCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              switchActivities(BarCodeActivity.class);
-            }
-        });
-
-        Button btnList2 = findViewById(R.id.btnList2);
-        btnList2.setOnClickListener(new View.OnClickListener() {
+        Button btnPickingLists = findViewById(R.id.btnList2);
+        btnPickingLists.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 switchActivities(DrawerLayoutActivity.class);
@@ -102,14 +94,14 @@ public class MainActivity extends AppCompatActivity {
             t.setText("Configurazione riuscita!");
             t.show();
 
-            switchActivities(VisualizeSingleList.class);
+            switchActivities(DrawerLayoutActivity.class);
         }
         else
         {
             Log.wtf("2", "onActivityResult: BAD_COMPANY");
 
             Toast t = new Toast(context);
-            t.setText("Configurazione fallita... :(");
+            t.setText("Configurazione fallita.");
             t.show();
 
         }
