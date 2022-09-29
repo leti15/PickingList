@@ -11,7 +11,7 @@
         android:id="@+id/edPassword"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:drawableTint="#00BCD4"
+        android:drawableTint="#47C0EF"
         android:hint="Write your password"
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/btnAvantiLogin"
@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Username"
-        android:textColor="@color/black"
+        android:textColor="#4557a2"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/textView3"
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Password"
-        android:textColor="@color/black"
+        android:textColor="#4557a2"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btnIndietroLogin"
@@ -54,7 +54,7 @@
         android:id="@+id/edUsername"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:drawableTint="#00BCD4"
+        android:drawableTint="#47C0EF"
         android:hint="Write your username"
         app:layout_constraintBottom_toTopOf="@+id/edPassword"
         app:layout_constraintEnd_toEndOf="parent"
@@ -71,30 +71,36 @@
 
     <Button
         android:id="@+id/btnAvantiLogin"
-        android:layout_width="0dp"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="#03A9F4"
-        android:text="avanti"
+        android:backgroundTint="#93B2DD"
+        app:icon="@drawable/icons_maggiore"
+        app:iconSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnIndietroLogin" />
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline12" />
 
     <Button
         android:id="@+id/btnIndietroLogin"
-        android:layout_width="0dp"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="#3A51E6"
-        android:text="indietro"
+        android:backgroundTint="#20254A"
+        app:icon="@drawable/icons_minore"
+        app:iconSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnAvantiLogin"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline12" />
 
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Passo 3: Login"
-        android:textColor="#3A51E6"
+        android:text="Effettua il login"
+        android:textColor="#4557a2"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline6"
@@ -109,5 +115,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.24076608" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.94" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

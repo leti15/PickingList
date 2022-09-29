@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-import javax.microedition.khronos.egl.EGLDisplay;
-
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleHolder> {
 
     private Context context;
@@ -32,7 +30,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleH
     @Override
     public ArticleHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.recicler_object, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.recycler_object, parent, false);
         return new ArticleHolder(view);
     }
 
@@ -50,9 +48,9 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleH
     protected static class ArticleHolder extends RecyclerView.ViewHolder {
 
         private Context context;
+        private Article article;
         private int qtaNeed;
 
-        private int maxQta;
         private CheckBox cbFinished;
         private Button btnAdd, btnMinus;
         private EditText edQta;
@@ -84,8 +82,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleH
                         t.show();
 
                         edQta.setText( String.valueOf(qtaNeed) );
+                        article.setQta(qtaNeed);
                     }
-
                 }
             });
 
@@ -96,7 +94,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleH
                     Integer x = Integer.parseInt(String.valueOf(edQta.getText()));
 
                     if(x != 0)
+                    {
                         edQta.setText(String.valueOf(x-1));
+                        article.setQta(x-1);
+                    }
                 }
             });
             btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -105,15 +106,17 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ArticleH
                     Integer x = Integer.parseInt(String.valueOf(edQta.getText()));
 
                     edQta.setText(String.valueOf(x+1));
+                    article.setQta(x+1);
                 }
             });
         }
 
         public void setArticle(Article article){
-            this.cbFinished.setText( article.getName() + ": " + article.getRegisterCode());
+            this.article = article;
+            this.cbFinished.setText(article.getName());
             this.edQta.setText( String.valueOf(article.getQta()) );
 
-            String s = article.getLocation().getLocationToStringCostumize();
+            String s = article.getLocation().getLocationToStringCustomized();
             this.tvLocation.setText(s);
             this.tvQtaNeed.setText( "Servono " + String.valueOf( article.getNeedingQta() ) + " " +  article.getMeasureUnit() );
             this.qtaNeed = article.getNeedingQta();

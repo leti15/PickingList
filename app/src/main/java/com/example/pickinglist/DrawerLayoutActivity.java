@@ -71,6 +71,7 @@ public class DrawerLayoutActivity extends AppCompatActivity{
 
     DataApi api;
     Toast t;
+    Boolean debugMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,8 @@ public class DrawerLayoutActivity extends AppCompatActivity{
         context = getApplicationContext();
         pref = getSharedPreferences(MainActivity.PREFERENCES_FILE, context.MODE_PRIVATE);
         editor = pref.edit();
+
+        debugMode = Boolean.valueOf(getIntent().getExtras().get("debugMode").toString());
 
         t = new Toast(context);
         mTitle = mDrawerTitle = getTitle();
@@ -101,7 +104,11 @@ public class DrawerLayoutActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 if(api != null && !api.getPickingLists().isEmpty())
+                {
                     api.savePickingLists(context);
+
+                    switchActivities(MainActivity.class);
+                }
                 else
                     Toast.makeText(context, "Nulla da salvare.", Toast.LENGTH_SHORT).show();
             }
@@ -183,10 +190,14 @@ public class DrawerLayoutActivity extends AppCompatActivity{
     void refreshPickingLists()
     {
         namePlant = pref.getString(MainActivity.PLANT, MainActivity.NONE);
+        String nameDomain = pref.getString(MainActivity.COMPANY, MainActivity.NONE);
         if(namePlant.compareTo(MainActivity.NONE) ==0)
             Toast.makeText(context, "Prima esegui la configurazione.", Toast.LENGTH_SHORT).show();
 
-        api = new DataApi(namePlant);
+        if(debugMode)
+            api = new DataApi(namePlant);
+        else
+            api = new DataApi(namePlant, nameDomain);
 
         api.loadPickingLists(context, new VolleyCallback() {
             @Override
@@ -331,4 +342,11 @@ public class DrawerLayoutActivity extends AppCompatActivity{
         else
             Toast.makeText(context, "Nessun risultato", Toast.LENGTH_SHORT).show();
     });
+
+    private void switchActivities(Class c) {
+        Intent switchActivityIntent = new Intent(this, c);
+        startActivity(switchActivityIntent);
+        int code = switchActivityIntent.getFlags();
+        Log.wtf("2", "switchActivities: return from intent with code " + code );
+    }
 }

@@ -19,16 +19,17 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import javax.xml.transform.dom.DOMLocator;
 
 public class DataApi {
     String webApiClass = "PickingListMobileApiWebApi";
-    String authKey = "10P9mU3aMttOeo10elo19dev13per";
+    String authKey = "72AqzERXTBUXkIt$";
     String url = "https://letizia.ngrok.io/api/PickingListMobileApiWebApi/";
-    String domine;
 
     String plantName;
-    final boolean[] isAuthenticated = new boolean[1];
-    final ArrayList<Plant>[] plants = new ArrayList[]{new ArrayList<>()};
+    String domainName;
     Long loggedUserId;
     ArrayList<PickingList> pickingList;
     ArrayList<Section> pickingListBySection;
@@ -46,15 +47,28 @@ public class DataApi {
         - Annullato
 */
 
-    public DataApi() { }
+    public DataApi()
+    {
+        this.domainName = "";
+    }
     public DataApi(String plant)
     {
         this.plantName = plant;
+        this.domainName = "";
+    }
+    public DataApi(String plant, String domain)
+    {
+        this.plantName = plant;
+        this.domainName = domain.toLowerCase(Locale.ROOT).trim();
+        this.url = "https://" + this.domainName + ".vettoreweb.it/PickingListMobileApiWebApi/";
     }
 
     //#region Setter & Getter
     public String getPlantName() { return plantName; }
     public void setPlantName(String p) { this.plantName = p; }
+
+    public String getDomainName() { return domainName; }
+    public void setDomainName(String p) { this.domainName = p; }
 
     public Long getLoggedUserId() { return loggedUserId; }
     public void setLoggedUserId(Long loggedUserId) { this.loggedUserId = loggedUserId; }
@@ -69,6 +83,7 @@ public class DataApi {
     public void setPickingListsShowed(ArrayList<Integer> pickingListsShowed){ this.pickingListsShowed = pickingListsShowed; }
     //#endregion
 
+    //Methods
     /** Verifica le credenziali inserite dall'utente
      * @param username: nome utente fornito dall'utente;
      * @param password: password fornita dall'utente;
@@ -125,30 +140,58 @@ public class DataApi {
     {
         //connessione al db del cliente e ritorna la lista dei plant
 
-        try {
+        try
+        {
             RequestQueue queue = Volley.newRequestQueue(context);
+            JsonObjectRequest request;
             JSONObject object = new JSONObject();
             object.put("AuthKey", authKey);
 
-            JsonObjectRequest request = new JsonObjectRequest(url + "GetPlants", object,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            if (null != response) {
-                                try {
-                                    callback.onSuccessResponse(response.get("plants").toString());
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+            if(domainName.compareTo("") != 0)
+            {
+                String url2 = "https://" + this.domainName + ".vettoreweb.it/PickingListMobileApiWebApi/GetPlants";
+                request = new JsonObjectRequest(url2, object,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                if (null != response) {
+                                    try {
+                                        callback.onSuccessResponse(response.get("plants").toString());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
-                        }
-                    }, new Response.ErrorListener() {
+                        }, new Response.ErrorListener() {
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.wtf("2", "onErrorResponse: " + error.getMessage() );
-                }
-            });
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.wtf("2", "onErrorResponse: " + error.getMessage());
+                    }
+                });
+            }
+            else
+            {
+                request = new JsonObjectRequest(url + "GetPlants", object,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                if (null != response) {
+                                    try {
+                                        callback.onSuccessResponse(response.get("plants").toString());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.wtf("2", "onErrorResponse: " + error.getMessage());
+                    }
+                });
+            }
             queue.add(request);
         }
         catch (Exception e)
@@ -158,8 +201,6 @@ public class DataApi {
     }
 
     /** Carica le picking list nella proprietà "pickingList"
-     * @return true: se le carica correttamente;
-     * @return false: se non riesce a caricarle.
      * **/
     public void loadPickingLists(Context context, VolleyCallback callback)
     {
@@ -368,7 +409,7 @@ public class DataApi {
                     locationObj.put("parentId", location.getParentId());
 
                     articleObj.put("id", article.getId());
-                    articleObj.put("qta", article.getNeedingQta());
+                    articleObj.put("qta", article.getQta());
                     articleObj.put("measureUnit", article.getMeasureUnit());
                     articleObj.put("name", article.getName());
                     articleObj.put("registerCode", article.getRegisterCode());

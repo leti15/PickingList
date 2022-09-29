@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ConfigActivity extends AppCompatActivity {
 
@@ -34,6 +35,7 @@ public class ConfigActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
 
     Intent intent;
+    Boolean debugMode;
     //#endregion
 
     @Override
@@ -43,7 +45,9 @@ public class ConfigActivity extends AppCompatActivity {
 
         //#region Inizializzazioni
         intent = getIntent();
+        debugMode = Boolean.valueOf(intent.getExtras().get("debugMode").toString());
         context = this.getBaseContext();
+
         api = new DataApi();
 
         Button btnIndietro = findViewById(R.id.btnIndietroCompany);
@@ -98,6 +102,10 @@ public class ConfigActivity extends AppCompatActivity {
 
                 if(nameCompany.compareTo("") != 0)
                 {
+
+                    if(!debugMode)
+                        api.setDomainName(nameCompany.toLowerCase(Locale.ROOT).trim());
+
                     api.getPlants(company, context, new VolleyCallback(){
                         @Override
                         public void onSuccessResponse(String result) {

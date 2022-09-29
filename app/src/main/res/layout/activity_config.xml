@@ -9,20 +9,23 @@
 
     <Button
         android:id="@+id/btnIndietroCompany"
-        android:layout_width="0dp"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="#3A51E6"
-        android:text="Indietro"
+        android:backgroundTint="#20254A"
+        app:icon="@drawable/icons_minore"
+        app:iconSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnAvantiCompany"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline10" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Azienda:"
-        android:textColor="@color/black"
+        android:textColor="#4557a2"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btnIndietroCompany"
@@ -35,6 +38,7 @@
         android:id="@+id/edCompany"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
+        android:drawableTint="#47C0EF"
         android:hint="Write the company's name"
         app:layout_constraintBottom_toTopOf="@+id/btnAvantiCompany"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,13 +48,16 @@
 
     <Button
         android:id="@+id/btnAvantiCompany"
-        android:layout_width="0dp"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="#03A9F4"
-        android:text="avanti"
+        android:backgroundTint="#93B2DD"
+        app:icon="@drawable/icons_maggiore"
+        app:iconSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnIndietroCompany" />
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline10" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
@@ -70,8 +77,8 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Passo 1: Scegli dominio"
-        android:textColor="#3A51E6"
+        android:text="Scegli dominio"
+        android:textColor="#4557a2"
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline7"
         app:layout_constraintEnd_toEndOf="parent"
@@ -79,5 +86,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.68"
         tools:textStyle="bold" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.94" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.security.Permission;
@@ -53,27 +54,33 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences pref;
     ActivityResultLauncher<Intent> activityResultLauncher;
 
+    Button btnConfig;
+    Button btnPickingLists;
+    Switch swtDebug;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Activity activity = this;
         context = this.getBaseContext();
         pref = getSharedPreferences("config_variables", context.MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
 
-        Button btnConfig = findViewById(R.id.btnConfig);
+        btnConfig = findViewById(R.id.btnConfig);
+        btnPickingLists = findViewById(R.id.btnList2);
+        swtDebug = findViewById(R.id.swtDebug);
+
         btnConfig.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 editor.putString(CONFIGURED, "false");
                 Intent i = new Intent(context, ConfigActivity.class);
+                i.putExtra("debugMode", swtDebug.isChecked());
                 startActivityForResult(i, 2);
             }
         });
 
-        Button btnPickingLists = findViewById(R.id.btnList2);
         btnPickingLists.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,11 +92,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == MainActivity.OK_COMPANY) 
         {
-            Log.wtf("2", "onActivityResult: OK_COMPANY");
-
             Toast t = new Toast(context);
             t.setText("Configurazione riuscita!");
             t.show();
@@ -98,24 +102,15 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            Log.wtf("2", "onActivityResult: BAD_COMPANY");
-
             Toast t = new Toast(context);
             t.setText("Configurazione fallita.");
             t.show();
-
         }
-    }
-    
-    @Override
-    public void onResume(){
-        super.onResume();
     }
 
     private void switchActivities(Class c) {
         Intent switchActivityIntent = new Intent(this, c);
+        switchActivityIntent.putExtra("debugMode", swtDebug.isChecked());
         startActivity(switchActivityIntent);
-        int code = switchActivityIntent.getFlags();
-        Log.wtf("2", "switchActivities: return from intent with code " + code );
     }
 }

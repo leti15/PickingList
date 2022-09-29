@@ -11,8 +11,8 @@
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Passo 2: Scegli plant"
-        android:textColor="#3A51E6"
+        android:text="Scegli nome azienda"
+        android:textColor="#4557a2"
         android:textSize="34sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelinePlantH"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,20 +23,23 @@
 
     <Button
         android:id="@+id/btnIndietroPlant"
-        android:layout_width="0dp"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="#3A51E6"
-        android:text="Indietro"
+        android:backgroundTint="#20254A"
+        app:icon="@drawable/icons_minore"
+        app:iconSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnAvantiPlant"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Plant:"
-        android:textColor="@color/black"
+        android:text="Azienda:"
+        android:textColor="#4557a2"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btnIndietroPlant"
@@ -47,13 +50,16 @@
 
     <Button
         android:id="@+id/btnAvantiPlant"
-        android:layout_width="0dp"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="#03A9F4"
-        android:text="avanti"
+        android:backgroundTint="#93B2DD"
+        app:icon="@drawable/icons_maggiore"
+        app:iconSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnIndietroPlant" />
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline13" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelinePlantV"
@@ -79,6 +85,13 @@
         app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
         app:layout_constraintVertical_bias="0.36" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.94" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

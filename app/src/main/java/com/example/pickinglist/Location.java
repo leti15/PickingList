@@ -47,7 +47,7 @@ public class Location {
     }
 
     //Methods
-    public String getLocationToStringCostumize()
+    public String getLocationToStringCustomized()
     {
         String s = " ";
         Integer i = 1;
